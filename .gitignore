@@ -1,1 +1,17 @@
+# Executables and build artifacts
 simulator.exe
+*.exe
+*.o
+*.obj
+
+# Office temporary lock files
+~$*
+
+# Python
+__pycache__/
+*.pyc
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+.vscode/
