@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>First Review Presentation — Digital Logic Circuit Simulator</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+  @page {
+    size: 16in 9in;
+    margin: 0;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #e2e8f0;
+    color: #334155;
+    line-height: 1.5;
+  }
+
+  .slide-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    padding: 30px;
+  }
+
+  .slide {
+    width: 16in;
+    height: 9in;
+    background: #ffffff;
+    padding: 0.6in 0.9in;
+    position: relative;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    page-break-after: always;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  @media print {
+    body { background: transparent; }
+    .slide-container { padding: 0; gap: 0; }
+    .slide { box-shadow: none; width: 16in; height: 9in; page-break-after: always; }
+  }
+
+  /* Header */
+  .slide-header {
+    border-top: 3px solid #2563eb;
+    padding-top: 15px;
+    margin-bottom: 25px;
+  }
+  .tag {
+    font-size: 13px;
+    font-weight: 700;
+    color: #2563eb;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .title {
+    font-size: 28px;
+    font-weight: 700;
+    color: #1e3a8a;
+    margin-top: 4px;
+  }
+
+  /* Footer */
+  .slide-footer {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #64748b;
+    border-top: 1px solid #e2e8f0;
+    padding-top: 12px;
+  }
+
+  /* Slide Content Grids */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 35px;
+    flex: 1;
+  }
+  .grid-bd {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 35px;
+    flex: 1;
+  }
+
+  .academic-box {
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    padding: 24px 28px;
+  }
+  .academic-box h3 {
+    font-size: 20px;
+    color: #1e3a8a;
+    margin-bottom: 16px;
+    font-weight: 600;
+  }
+  .academic-box ul {
+    list-style: none;
+  }
+  .academic-box li {
+    font-size: 14.5px;
+    color: #334155;
+    margin-bottom: 14px;
+    line-height: 1.5;
+  }
+  .academic-box li strong {
+    color: #0f172a;
+    font-weight: 600;
+  }
+
+  .code-box {
+    background: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    padding: 16px 20px;
+    font-family: 'JetBrains Mono', Consolas, monospace;
+    font-size: 12.5px;
+    color: #0f172a;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    flex: 1;
+  }
+
+  /* Paper cards */
+  .paper-card {
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    padding: 18px 24px;
+    margin-bottom: 16px;
+  }
+  .paper-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: #1e3a8a;
+    margin-bottom: 6px;
+  }
+  .paper-meta {
+    font-size: 13px;
+    color: #64748b;
+    margin-bottom: 10px;
+  }
+  .paper-analysis {
+    font-size: 14px;
+    margin-bottom: 6px;
+  }
+  .paper-drawback {
+    font-size: 14px;
+    color: #b91c1c;
+  }
+
+  /* Title Slide */
+  .title-slide {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border: 1px solid #cbd5e1;
+    background: #f8fafc;
+    border-top: 6px solid #1e3a8a;
+    padding: 60px 80px;
+    height: 100%;
+  }
+  .course-badge {
+    font-size: 15px;
+    font-weight: 700;
+    color: #2563eb;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .hero-title {
+    font-size: 48px;
+    font-weight: 800;
+    color: #1e3a8a;
+    margin-bottom: 15px;
+    line-height: 1.15;
+  }
+  .hero-subtitle {
+    font-size: 22px;
+    color: #475569;
+    margin-bottom: 45px;
+  }
+  .authors-block {
+    border-left: 3px solid #2563eb;
+    padding-left: 20px;
+    margin-bottom: 35px;
+  }
+  .authors-block p {
+    font-size: 18px;
+    color: #1e293b;
+    line-height: 1.6;
+  }
+  .authors-block p strong {
+    color: #1e3a8a;
+  }
+  .inst-meta {
+    font-size: 14px;
+    color: #64748b;
+  }
+
+  /* Block diagram steps */
+  .bd-module {
+    margin-bottom: 16px;
+    padding-left: 15px;
+    border-left: 3px solid #2563eb;
+  }
+  .bd-module-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #2563eb;
+    margin-bottom: 3px;
+  }
+  .bd-module-desc {
+    font-size: 13.5px;
+    color: #334155;
+  }
+</style>
+</head>
+<body>
+
+<div class="slide-container">
+
+  <!-- SLIDE 1: Title Slide -->
+  <div class="slide">
+    <div class="title-slide">
+      <div class="course-badge">Course Project — First Review (October 12, 2026)</div>
+      <h1 class="hero-title">Digital Logic Circuit Simulator</h1>
+      <div class="hero-subtitle">A Graph-Theoretic Framework for Combinational Logic Validation & Simulation</div>
+      
+      <div class="authors-block">
+        <p><strong>Presented by:</strong></p>
+        <p>• <strong>Markanda Meher</strong> (Roll No. 206126020)</p>
+        <p>• <strong>Nikhil</strong> (Roll No. 206126021)</p>
+      </div>
+
+      <div class="inst-meta">
+        Department of Computer Science & Engineering | Advanced Data Structures & Algorithms
+      </div>
+    </div>
+  </div>
+
+  <!-- SLIDE 2: 1. Introduction -->
+  <div class="slide">
+    <div class="slide-header">
+      <div class="tag">Review Point 1</div>
+      <div class="title">1. Introduction — Problem Statement & Need for Solution</div>
+    </div>
+    <div class="grid-2">
+      <div class="academic-box">
+        <h3>The Problem in Physical Prototyping</h3>
+        <ul>
+          <li><strong>Breadboard Clutter & Tangled Wires:</strong> Constructing multi-gate logic circuits on physical breadboards leads to dense jumper-wire tangles, loose pin connections, and unreliable contact resistance.</li>
+          <li><strong>Tedious Fault Localization:</strong> Debugging broken traces or faulty gate inputs requires time-consuming manual probing using multimeters or logic probes.</li>
+          <li><strong>Hardware Damage Risks:</strong> Accidental short circuits, inverted IC pins, or incorrect VCC/GND connections permanently damage physical 7400-series TTL integrated circuits.</li>
+          <li><strong>Poor Scalability:</strong> Scaling beyond 10-15 gates becomes physically cumbersome and impractical for student laboratory experiments.</li>
+          <li><strong>No Automated Design Checking:</strong> Physical boards offer no mechanism to detect unintended feedback loops or race conditions before power is applied.</li>
+        </ul>
+      </div>
+      <div class="academic-box">
+        <h3>The Need for Software Simulation</h3>
+        <ul>
+          <li><strong>Safe, Zero-Cost Experimentation:</strong> Eliminates physical component wear, damaged ICs, and lab resource bottlenecks while enabling instant circuit restructuring.</li>
+          <li><strong>Automated Cycle Detection:</strong> Models the circuit as a Directed Graph; executes linear-time graph algorithms to identify and halt illegal feedback loops.</li>
+          <li><strong>Deterministic Topological Scheduling:</strong> Formally guarantees that upstream driver signals settle before downstream load gates evaluate, preventing race conditions.</li>
+          <li><strong>Exhaustive Truth Table Verification:</strong> Automatically tests all 2<sup>N</sup> input permutations, verifying circuit behavior against theoretical Boolean algebra in milliseconds.</li>
+          <li><strong>Pedagogical Value:</strong> Demonstrates the direct practical application of core graph algorithms (DFS, Kahn's BFS, Disjoint Sets) to solve computer architecture problems.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <span>Digital Logic Circuit Simulator | Department of CSE</span>
+      <span>Slide 2 of 8</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 3: 2. Literature Survey -->
+  <div class="slide">
+    <div class="slide-header">
+      <div class="tag">Review Point 2</div>
+      <div class="title">2. Literature Survey — Analysis of 3 Papers & Their Drawbacks</div>
+    </div>
+    <div style="flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
+      
+      <div class="paper-card">
+        <div class="paper-title">Paper 1: A. B. Kahn (1962) — "Topological Sorting of Large Networks"</div>
+        <div class="paper-meta">Communications of the ACM, Vol. 5, No. 11, pp. 558–562</div>
+        <div class="paper-analysis"><strong>Analysis / Contribution:</strong> Introduced in-degree based queue processing (BFS style) to establish a linear processing order in Directed Acyclic Graphs with optimal O(V + E) runtime complexity.</div>
+        <div class="paper-drawback"><strong>Drawbacks:</strong> (1) Does not locate cycle paths: when cycles exist, in-degrees fail to reach zero and the algorithm halts without isolating the offending back-edges. (2) Arbitrary tie-breaking: does not produce levelized evaluation stages for parallel execution.</div>
+      </div>
+
+      <div class="paper-card">
+        <div class="paper-title">Paper 2: R. E. Tarjan (1972) — "Depth-First Search and Linear Graph Algorithms"</div>
+        <div class="paper-meta">SIAM Journal on Computing, Vol. 1, No. 2, pp. 146–160</div>
+        <div class="paper-analysis"><strong>Analysis / Contribution:</strong> Formulated 3-state depth-first search (White/Gray/Black node coloring) and strongly connected components (SCC) analysis running in linear O(V + E) time.</div>
+        <div class="paper-drawback"><strong>Drawbacks:</strong> (1) Recursion call-stack overflow risk on deep or large netlists. (2) Identifying SCCs or back-edges detects cycles but does not provide an execution schedule for signal simulation.</div>
+      </div>
+
+      <div class="paper-card">
+        <div class="paper-title">Paper 3: R. E. Tarjan (1975) — "Efficiency of a Good But Not Linear Set Union Algorithm"</div>
+        <div class="paper-meta">Journal of the ACM, Vol. 22, No. 2, pp. 215–225</div>
+        <div class="paper-analysis"><strong>Analysis / Contribution:</strong> Analyzed Disjoint-Set Union (DSU) with union-by-rank and path compression, proving near-linear O(α(N)) amortized operational bounds for connected components.</div>
+        <div class="paper-drawback"><strong>Drawbacks:</strong> (1) Symmetric / Undirected only: merges components bidirectionally, failing to enforce directed signal propagation (driver-to-load). (2) Irreversible unions: cannot easily split wire nets upon wire deletion.</div>
+      </div>
+
+    </div>
+    <div class="slide-footer">
+      <span>Digital Logic Circuit Simulator | Department of CSE</span>
+      <span>Slide 3 of 8</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 4: 3. Block Diagram & Algorithmic Novelty -->
+  <div class="slide">
+    <div class="slide-header">
+      <div class="tag">Review Point 3</div>
+      <div class="title">3. Block Diagram & Algorithmic Novelty</div>
+    </div>
+    <div class="grid-bd">
+      <div class="academic-box">
+        <h3>System Block Diagram: 4-Stage Architecture</h3>
+        
+        <div class="bd-module">
+          <div class="bd-module-title">▼ Module 1: Circuit Graph Model</div>
+          <div class="bd-module-desc">Directed Graph G = (V, E) with Adjacency List. Gates represent vertices; wires represent directed edges. Fast O(1) hash maps store gate types, pins, and in-degrees.</div>
+        </div>
+
+        <div class="bd-module">
+          <div class="bd-module-title">▼ Module 2: Cycle Detection Engine</div>
+          <div class="bd-module-desc">Tarjan's 3-Color DFS (White=Unvisited, Gray=Visiting, Black=Done). Traps invalid back-edges (feedback loops) and halts simulation with clear error reports.</div>
+        </div>
+
+        <div class="bd-module">
+          <div class="bd-module-title">▼ Module 3: Evaluation Order Scheduler</div>
+          <div class="bd-module-desc">Kahn's Topological Sort (In-Degree Queue BFS). Derives strict execution order guaranteeing all upstream gate dependencies are evaluated first.</div>
+        </div>
+
+        <div class="bd-module">
+          <div class="bd-module-title">▼ Module 4: Logic Execution & Verification</div>
+          <div class="bd-module-desc">Boolean Gate Switch Engine + Bitwise Truth Table Generator. Propagates logic signals level-by-level across all 2<sup>N</sup> input vectors.</div>
+        </div>
+
+      </div>
+
+      <div class="academic-box">
+        <h3>Algorithmic Novelty & Contribution</h3>
+        <ul>
+          <li><strong>Dual-Phase Graph Validation:</strong> Decouples cycle localization from evaluation scheduling. Uses 3-color DFS specifically to isolate and report offending feedback edges, then uses Kahn's algorithm for deterministic levelized scheduling.</li>
+          <li><strong>Strict Dependency Invariance:</strong> Guarantees zero race conditions. In combinational circuits, every gate evaluates strictly after all its upstream driver inputs are stabilized in O(V + E) time.</li>
+          <li><strong>Fast O(1) Hash Map Gate Indexing:</strong> Provides instantaneous retrieval of gates, netlists, and pin states by name, eliminating O(V) scan overheads during multi-gate propagation.</li>
+          <li><strong>Automated Exhaustive Verification:</strong> Bitwise simulation engine generates full truth tables across all 2<sup>N</sup> input permutations, catching logic bugs without physical test vectors.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <span>Digital Logic Circuit Simulator | Department of CSE</span>
+      <span>Slide 4 of 8</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 5: 4. Algorithms / Pseudo Code (Modules 1 & 2) -->
+  <div class="slide">
+    <div class="slide-header">
+      <div class="tag">Review Point 4 (Part 1)</div>
+      <div class="title">4. Algorithms / Pseudocode — Graph Model & Cycle Detection</div>
+    </div>
+    <div class="grid-2">
+      <div class="academic-box" style="display:flex; flex-direction:column;">
+        <h3>Module 1: Graph Representation</h3>
+        <p style="font-size:13px; color:#64748b; margin-bottom:10px;">Adjacency list & in-degree table initialization</p>
+        <div class="code-box">Algorithm BuildCircuitGraph(Gates V, Wires E):
+1:  adjList  = HashMap&lt;GateID, List&lt;GateID&gt;&gt;()
+2:  inDegree = HashMap&lt;GateID, Integer&gt;()
+3:  For each gate g in V:
+4:      adjList[g.id] = empty_list()
+5:      inDegree[g.id] = 0
+6:  For each wire (u, v) in E:
+7:      // u is driver gate, v is load gate
+8:      adjList[u].append(v)
+9:      inDegree[v] = inDegree[v] + 1
+10: Return (adjList, inDegree)
+
+Time Complexity:  O(V + E)
+Space Complexity: O(V + E)</div>
+      </div>
+
+      <div class="academic-box" style="display:flex; flex-direction:column;">
+        <h3>Module 2: Cycle Detection (Tarjan's 3-Color DFS)</h3>
+        <p style="font-size:13px; color:#64748b; margin-bottom:10px;">Detects feedback loops via back-edges</p>
+        <div class="code-box">Algorithm HasCycleDFS(u, color, adjList):
+1:  color[u] = GRAY  // In recursion stack
+2:  For each neighbor v in adjList[u]:
+3:      If color[v] == GRAY:
+4:          RecordCycleBackEdge(u, v)
+5:          Return TRUE  // Cycle detected!
+6:      If color[v] == WHITE:
+7:          If HasCycleDFS(v, color, adjList) == TRUE:
+8:              Return TRUE
+9:  color[u] = BLACK // Fully explored
+10: Return FALSE
+
+Time Complexity:  O(V + E)
+Space Complexity: O(V) recursion stack</div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <span>Digital Logic Circuit Simulator | Department of CSE</span>
+      <span>Slide 5 of 8</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 6: 4. Algorithms / Pseudo Code (Modules 3 & 4) -->
+  <div class="slide">
+    <div class="slide-header">
+      <div class="tag">Review Point 4 (Part 2)</div>
+      <div class="title">4. Algorithms / Pseudocode — Scheduling & Simulation</div>
+    </div>
+    <div class="grid-2">
+      <div class="academic-box" style="display:flex; flex-direction:column;">
+        <h3>Module 3: Evaluation Scheduler (Kahn's Algorithm)</h3>
+        <p style="font-size:13px; color:#64748b; margin-bottom:10px;">Topological sort via in-degree BFS queue</p>
+        <div class="code-box">Algorithm KahnTopologicalSort(V, inDegree, adjList):
+1:  Q = EmptyQueue()
+2:  For each gate g in V:
+3:      If inDegree[g] == 0: Q.push(g)
+4:  evalOrder = []
+5:  While Q is not empty:
+6:      u = Q.pop()
+7:      evalOrder.append(u)
+8:      For each v in adjList[u]:
+9:          inDegree[v] = inDegree[v] - 1
+10:         If inDegree[v] == 0: Q.push(v)
+11: Return evalOrder
+
+Time Complexity:  O(V + E)
+Space Complexity: O(V) queue & order array</div>
+      </div>
+
+      <div class="academic-box" style="display:flex; flex-direction:column;">
+        <h3>Module 4: Logic Execution & Verification</h3>
+        <p style="font-size:13px; color:#64748b; margin-bottom:10px;">Topological propagation & truth table generator</p>
+        <div class="code-box">Algorithm SimulateCircuit(evalOrder, inputVector):
+1:  values = HashMap&lt;GateID, Boolean&gt;()
+2:  For each g in evalOrder:
+3:      If g.type == INPUT:
+4:          values[g] = inputVector[g.id]
+5:      Else:
+6:          inVals = [values[p] for p in g.predecessors]
+7:          values[g] = EvaluateGate(g.type, inVals)
+8:  Return values
+
+Algorithm GenerateTruthTable(N_inputs, evalOrder):
+1:  For row = 0 to (2^N - 1):
+2:      inputVector = DecodeBits(row, N_inputs)
+3:      outputRow = SimulateCircuit(evalOrder, inputVector)
+4:      PrintTruthTableRow(inputVector, outputRow)</div>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <span>Digital Logic Circuit Simulator | Department of CSE</span>
+      <span>Slide 6 of 8</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 7: 5. Dataset (Benchmark Suite) -->
+  <div class="slide">
+    <div class="slide-header">
+      <div class="tag">Review Point 5</div>
+      <div class="title">5. Dataset — IEEE ISCAS '85 Benchmark Circuit Suite</div>
+    </div>
+    <div class="grid-2">
+      <div class="academic-box">
+        <h3>Benchmark Suite & Repository Links</h3>
+        <ul>
+          <li><strong>Dataset Name:</strong> IEEE ISCAS '85 Benchmark Suite (International Symposium on Circuits and Systems).</li>
+          <li><strong>Industry Standard:</strong> Universally recognized standard benchmark in Electronic Design Automation (EDA) and academic CAD research for combinational circuit validation.</li>
+          <li><strong>Repository Link 1 (Primary):</strong> University of Tennessee EECS CAD Lab:<br><a href="https://web.eecs.utk.edu/~troy/benchmark/" style="color:#2563eb;">https://web.eecs.utk.edu/~troy/benchmark/</a></li>
+          <li><strong>Repository Link 2 (Mirror):</strong> Czech Technical University (FEE CTU Benchmarks):<br><a href="https://ddd.fit.cvut.cz/prj/Benchmarks/" style="color:#2563eb;">https://ddd.fit.cvut.cz/prj/Benchmarks/</a></li>
+          <li><strong>Netlist Format (.bench):</strong> Human-readable ASCII defining Primary Inputs (INPUT), Primary Outputs (OUTPUT), and gate connection equations (e.g., <code>10 = NAND(1, 3)</code>).</li>
+        </ul>
+      </div>
+
+      <div class="academic-box">
+        <h3>Benchmark Circuits & Project Role</h3>
+        <ul>
+          <li><strong>c17 (6 Gates, 5 Inputs, 2 Outputs):</strong> Smallest ISCAS netlist; used for fundamental algorithmic sanity checks and truth table validation across all 32 combinations.</li>
+          <li><strong>c432 (160 Gates, 36 Inputs, 7 Outputs):</strong> 27-channel interrupt controller; tests topological scheduling performance on medium-scale fanout networks.</li>
+          <li><strong>c499 (202 Gates, 41 Inputs, 32 Outputs):</strong> 32-bit single-error-correcting circuit (SEC-DED); verifies deep logic paths.</li>
+          <li><strong>c880 (383 Gates, 60 Inputs, 26 Outputs):</strong> 8-bit Arithmetic Logic Unit (ALU); evaluates asymptotic time complexity and memory scaling on 380+ nodes.</li>
+          <li><strong>Project Role:</strong> Validates cycle detection correctness, confirms logic outputs against reference truth tables, and demonstrates linear O(V + E) scalability.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <span>Digital Logic Circuit Simulator | Department of CSE</span>
+      <span>Slide 7 of 8</span>
+    </div>
+  </div>
+
+  <!-- SLIDE 8: Summary / Questions -->
+  <div class="slide">
+    <div class="slide-header">
+      <div class="tag">Conclusion</div>
+      <div class="title">Summary of First Review Deliverables & Alignment</div>
+    </div>
+    <div class="academic-box" style="flex:1; display:flex; flex-direction:column; justify-content:space-between; padding:35px 45px;">
+      <h3 style="font-size:22px;">Review Alignment Matrix</h3>
+      
+      <div style="font-size:16px; line-height:1.8;">
+        <p>✔ <strong>1. Problem Statement & Need:</strong> Demonstrated physical breadboard constraints (wiring clutter, IC damage, no automated validation) and established the need for a software DAG simulator.</p>
+        <p>✔ <strong>2. Literature Survey:</strong> Analyzed 3 landmark papers (Kahn 1962, Tarjan 1972 DFS, Tarjan 1975 DSU) and clearly identified their algorithmic drawbacks.</p>
+        <p>✔ <strong>3. Block Diagram & Novelty:</strong> Presented a 4-module architecture featuring dual-phase graph validation (DFS cycle isolation + Kahn's levelized scheduling).</p>
+        <p>✔ <strong>4. Algorithms & Pseudocode:</strong> Provided formal pseudocode and asymptotic analysis for all 4 modules (Graph Builder, 3-Color DFS, Kahn's BFS, Logic Simulation).</p>
+        <p>✔ <strong>5. Dataset & Benchmark:</strong> Documented the official IEEE ISCAS '85 suite with university download links and verified c17 truth table correctness.</p>
+      </div>
+
+      <div style="border-top:1px solid #cbd5e1; padding-top:20px; text-align:center;">
+        <h2 style="color:#1e3a8a; font-size:26px;">Thank You. Open for Questions from the Review Committee.</h2>
+      </div>
+    </div>
+    <div class="slide-footer">
+      <span>Digital Logic Circuit Simulator | Department of CSE</span>
+      <span>Slide 8 of 8</span>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

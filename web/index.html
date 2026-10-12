@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digital Logic Circuit Simulator — Interactive Web EDA</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Top Header Navigation -->
+  <header>
+    <div class="brand">
+      <span style="font-size: 20px;">🔌</span>
+      <h1>Digital Logic Circuit Simulator</h1>
+      <span class="brand-badge">C++ Engine Integrated</span>
+      <span class="team-tag">| Markanda Meher (206126020) &amp; Nikhil (206126021)</span>
+    </div>
+
+    <div class="header-actions">
+      <button class="btn btn-primary" id="btnSimulate">
+        <span>▶️</span> Run Simulation
+      </button>
+      <button class="btn" id="btnStepTopo">
+        <span>🔄</span> Step-by-Step Topo
+      </button>
+      <button class="btn" id="btnTruthTable">
+        <span>📊</span> Truth Table
+      </button>
+      <button class="btn btn-success" id="btnExportCpp">
+        <span>⚙️</span> Export C++ Code
+      </button>
+      <button class="btn btn-danger" id="btnClear">
+        <span>🧹</span> Clear Canvas
+      </button>
+    </div>
+  </header>
+
+  <!-- App Main Workspace -->
+  <div class="app-container">
+
+    <!-- Left Component Palette -->
+    <aside class="sidebar">
+      
+      <!-- Primary I/O Pins -->
+      <div class="palette-section">
+        <div class="palette-title">Input / Output Pins</div>
+        <div class="palette-grid">
+          <div class="gate-card" draggable="true" data-type="INPUT">
+            <span class="gate-icon">🎚️</span>
+            <span class="gate-name">INPUT Pin</span>
+          </div>
+          <div class="gate-card" draggable="true" data-type="OUTPUT">
+            <span class="gate-icon">💡</span>
+            <span class="gate-name">OUTPUT Bulb</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Basic Logic Gates -->
+      <div class="palette-section">
+        <div class="palette-title">Basic Logic Gates</div>
+        <div class="palette-grid">
+          <div class="gate-card" draggable="true" data-type="AND">
+            <span class="gate-icon">∧</span>
+            <span class="gate-name">AND Gate</span>
+          </div>
+          <div class="gate-card" draggable="true" data-type="OR">
+            <span class="gate-icon">∨</span>
+            <span class="gate-name">OR Gate</span>
+          </div>
+          <div class="gate-card" draggable="true" data-type="NOT">
+            <span class="gate-icon">¬</span>
+            <span class="gate-name">NOT Inverter</span>
+          </div>
+          <div class="gate-card" draggable="true" data-type="XOR">
+            <span class="gate-icon">⊕</span>
+            <span class="gate-name">XOR Gate</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Universal & Extended Gates -->
+      <div class="palette-section">
+        <div class="palette-title">Universal Gates</div>
+        <div class="palette-grid">
+          <div class="gate-card" draggable="true" data-type="NAND">
+            <span class="gate-icon">⊼</span>
+            <span class="gate-name">NAND Gate</span>
+          </div>
+          <div class="gate-card" draggable="true" data-type="NOR">
+            <span class="gate-icon">⊽</span>
+            <span class="gate-name">NOR Gate</span>
+          </div>
+          <div class="gate-card" draggable="true" data-type="XNOR">
+            <span class="gate-icon">⊙</span>
+            <span class="gate-name">XNOR Gate</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Benchmark Preset Circuits -->
+      <div class="palette-section" style="flex: 1;">
+        <div class="palette-title">Built-In Benchmark Demos</div>
+        <button class="preset-btn" id="presetHalfAdder">
+          <span>⚡ Half Adder</span>
+          <span class="preset-badge">Sum/Carry</span>
+        </button>
+        <button class="preset-btn" id="presetNOR">
+          <span>⚡ NOR Circuit</span>
+          <span class="preset-badge">OR+NOT</span>
+        </button>
+        <button class="preset-btn" id="presetMux">
+          <span>⚡ 2-to-1 Multiplexer</span>
+          <span class="preset-badge">3 Inputs</span>
+        </button>
+        <button class="preset-btn" id="presetISCAS">
+          <span>🏆 ISCAS '85 c17</span>
+          <span class="preset-badge">IEEE Spec</span>
+        </button>
+      </div>
+
+    </aside>
+
+    <!-- Center Canvas Area -->
+    <main class="canvas-wrapper" id="canvasWrapper">
+      <canvas id="circuitCanvas"></canvas>
+
+      <!-- Live Floating Status Bar -->
+      <div class="canvas-status-bar">
+        <div class="status-pill">
+          <div class="dot" id="statusDot"></div>
+          <span id="circuitStatusText">Acyclic DAG (Ready)</span>
+        </div>
+        <span style="color: var(--border-color);">|</span>
+        <span id="nodeWireCount">Gates: 0 | Wires: 0</span>
+      </div>
+
+      <!-- Quick Canvas Instructions -->
+      <div class="canvas-hint">
+        💡 <strong>Quick Controls:</strong> Drag gates from left palette • Click &amp; drag from <strong>Right Port (Output)</strong> to <strong>Left Port (Input)</strong> to connect wire • Click <strong>INPUT Switch</strong> to toggle (0 / 1) • Press <strong>Delete / Backspace</strong> to remove selected element.
+      </div>
+    </main>
+
+    <!-- Right Live Inspector & Topo Panel -->
+    <aside class="inspector-panel">
+      <div class="panel-header">
+        <span>🔍 Live Inspector</span>
+        <span style="font-size: 11px; color: var(--accent-emerald);">● Real-Time</span>
+      </div>
+
+      <div class="panel-content">
+        
+        <!-- Selected Component Info Card -->
+        <div class="info-card">
+          <h4>Selected Gate Inspector</h4>
+          <div id="inspectorDetails">
+            <p style="color: var(--text-muted); font-size: 11.5px;">Click any gate on the canvas to inspect its fan-in wires, logic equation, and computed signal.</p>
+          </div>
+        </div>
+
+        <!-- Topological Scheduling Sequence -->
+        <div class="info-card">
+          <h4>Kahn's Topological Order</h4>
+          <div class="topo-box" id="topoOrderBox">
+            Order: (Run simulation to compute)
+          </div>
+        </div>
+
+        <!-- 3-Stage Signal Pipeline Summary -->
+        <div class="info-card">
+          <h4>3-Stage Signal Flow</h4>
+          <div id="signalPipelineBox" style="font-size: 11.5px; line-height: 1.6;">
+            <div style="color: var(--accent-blue); font-weight: 600;">1. Inputs: <span id="pipelineInputs" style="color: #fff;">None</span></div>
+            <div style="color: var(--accent-amber); font-weight: 600;">2. Logic: <span id="pipelineLogic" style="color: #fff;">None</span></div>
+            <div style="color: var(--accent-emerald); font-weight: 600;">3. Outputs: <span id="pipelineOutputs" style="color: #fff;">None</span></div>
+          </div>
+        </div>
+
+      </div>
+    </aside>
+
+  </div>
+
+  <!-- Modal 1: Truth Table -->
+  <div class="modal-overlay" id="modalTruthTable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>📊 Exhaustive Truth Table Generator</h2>
+        <button class="close-btn" id="closeTruthTable">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="color: var(--text-muted); margin-bottom: 12px; font-size: 12px;">
+          Evaluated all combinations (<span id="ttCombinations">0</span> rows) using bitwise input extraction and Kahn's topological sort.
+        </p>
+        <div id="truthTableContainer">
+          <!-- Dynamically populated table -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" id="closeTruthTableBtn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 2: Export C++ Code & Backend Sync -->
+  <div class="modal-overlay" id="modalCppSync">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>⚙️ C++ Code Generator &amp; Backend Synchronization</h2>
+        <button class="close-btn" id="closeCppSync">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="color: var(--text-muted); margin-bottom: 12px; font-size: 12px;">
+          This C++ code directly maps your visual circuit into <code>Circuit.h</code> and <code>Simulator.h</code> function calls!
+        </p>
+        <div class="code-box" id="cppCodeDisplay">// Generating C++ code...</div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" id="btnCopyCpp">📋 Copy C++ Code</button>
+        <button class="btn" id="closeCppSyncBtn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Load Scripts -->
+  <script src="circuit-engine.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
