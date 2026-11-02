@@ -16,6 +16,7 @@
 #include "Circuit.h"
 #include "Simulator.h"
 #include "UnionFind.h"
+#include "NovelAlgorithms.h"
 #include <iostream>
 #include <string>
 #include <limits>
@@ -71,9 +72,13 @@ void printMenu() {
     std::cout << "  13. Demo: 2-to-1 Multiplexer (3 Inputs, 5 Gates with schematic)\n";
     std::cout << "  14. Demo: IEEE ISCAS '85 c17 Benchmark (6 NANDs, 32 rows)\n\n";
 
-    std::cout << "   0. Exit Simulator\n";
+    std::cout << "  --- NOVEL ALGORITHMIC CONTRIBUTIONS ---\n";
+    std::cout << "  15. Novel: Levelized Parallel Evaluation (LPE)\n";
+    std::cout << "  16. Novel: Incremental Signal Propagation (ISP)\n\n";
+
+        std::cout << "   0. Exit Simulator\n";
     std::cout << "==============================================================\n";
-    std::cout << "  Enter your choice (0-14): ";
+    std::cout << "  Enter your choice (0-16): ";
 }
 
 // ---------------------------------------------------------
@@ -653,6 +658,56 @@ int main() {
                 break;
             }
 
+
+            // ================= 15. NOVEL: LPE =================
+            case 15: {
+                if (circuit.gates.empty()) {
+                    std::cout << "\n  [!] No circuit loaded. Please build or load a demo first.\n";
+                    std::cout << "  Tip: Try option 11 (Half Adder) or 14 (ISCAS c17) first.\n";
+                    break;
+                }
+                LPEResult lpe = levelizedParallelEvaluation(circuit);
+                printLPEResult(circuit, lpe);
+                break;
+            }
+
+            // ================= 16. NOVEL: ISP =================
+            case 16: {
+                if (circuit.gates.empty()) {
+                    std::cout << "\n  [!] No circuit loaded. Please build or load a demo first.\n";
+                    break;
+                }
+                // Find input gates
+                std::vector<int> inputIds;
+                for (const auto& g : circuit.gates)
+                    if (g.type == GateType::INPUT) inputIds.push_back(g.id);
+                if (inputIds.empty()) {
+                    std::cout << "\n  [!] Circuit has no INPUT gates.\n";
+                    break;
+                }
+                // First do a full simulation to get initial state
+                std::cout << "\n  Running initial full simulation to get baseline...\n";
+                simulate(circuit, false);
+                // Get topo order for ISP
+                std::vector<int> topoOrd = topologicalSort(circuit);
+                // Ask user which input to toggle
+                std::cout << "\n  Available INPUT gates:\n";
+                for (int id : inputIds) {
+                    std::cout << "    G" << id << " [" << circuit.gates[id].label << "] = "
+                              << circuit.gates[id].outputValue << "\n";
+                }
+                std::cout << "  Enter gate ID to toggle: ";
+                int gid;
+                if (!readInt(gid)) { std::cout << "  Invalid.\n"; break; }
+                bool validId = false;
+                for (int id : inputIds) if (id == gid) validId = true;
+                if (!validId) { std::cout << "  [!] Not an input gate.\n"; break; }
+                int curVal = circuit.gates[gid].outputValue;
+                int newVal = 1 - curVal;  // toggle
+                incrementalSignalPropagation(circuit, topoOrd, gid, newVal, true);
+                break;
+            }
+
             // ================= 0. EXIT =================
             case 0: {
                 std::cout << "\n  Thank you for using the Digital Logic Circuit Simulator!\n";
@@ -662,7 +717,7 @@ int main() {
             }
 
             default:
-                std::cout << "  [!] Unknown option. Please select 0 to 14.\n";
+                std::cout << "  [!] Unknown option. Please select 0 to 16.\n";
                 break;
         }
     }

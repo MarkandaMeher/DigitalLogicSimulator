@@ -22,7 +22,51 @@ An end-to-end software framework for constructing, validating, and simulating di
 ## 🧠 Core Algorithms & Data Structures
 
 | Module | Data Structure / Algorithm | Time Complexity | Space Complexity | Purpose |
-|---|---|:---:|:---:|---|
+|
+
+---
+
+## ⭐ Novel Algorithmic Contributions (Original Research)
+
+These two algorithms are **original contributions** of this project — **not covered** by the three surveyed papers (Kahn 1962, Tarjan DFS 1972, Tarjan DSU 1975).
+
+### Algorithm 1: Levelized Parallel Evaluation (LPE)
+> Implemented in [`NovelAlgorithms.h`](NovelAlgorithms.h) · Menu Option `15`
+
+Standard Kahn's algorithm produces a flat linear topological order. **LPE extends it** by propagating the **maximum path depth** forward through the DAG, grouping gates into parallel *evaluation stages* — gates in the same stage have zero interdependencies and can be evaluated concurrently (mirroring real hardware pipeline stages).
+
+**Key outputs:**
+- `levelOf[gateId]` — which parallel stage each gate belongs to
+- `stages[][]` — list of gates per stage
+- `criticalPathLength` — minimum sequential stages needed to compute final output
+- `parallelSpeedup` — theoretical speedup factor over sequential evaluation
+
+**Complexity:** O(V + E) — same as Kahn's, zero overhead.
+
+**Why novel:** No surveyed paper computes parallel level grouping OR Critical Path Length for a circuit DAG. This is a key metric in digital chip timing analysis (EDA tools call this "static timing analysis").
+
+---
+
+### Algorithm 2: Incremental Signal Propagation (ISP)
+> Implemented in [`NovelAlgorithms.h`](NovelAlgorithms.h) · Menu Option `16`
+
+When a user toggles a single input switch (0→1 or 1→0), the naive approach re-evaluates **all V gates** from scratch — wasteful for large circuits. **ISP uses a dirty-bit BFS** starting from the changed gate, marking only the downstream-reachable gates as "dirty", then re-evaluates **only dirty gates** in topological order.
+
+**Key outputs:**
+- `dirtyGates` — count of gates that actually needed re-evaluation
+- `skippedGates` — count of gates skipped
+- `percentSaved` — efficiency improvement percentage
+
+**Complexity:** O(D + E_D) where D << V — dramatically faster than full O(V+E) re-simulation.
+
+**Why novel:** All three surveyed papers assume **static, one-time computation**. ISP specifically targets **dynamic interactive simulation** where inputs change repeatedly — completely unaddressed by any surveyed paper.
+
+| Algorithm | vs. Surveyed Papers | Key Contribution |
+|---|---|---|
+| **LPE** | Kahn gives flat order only | Adds level grouping + Critical Path Length |
+| **ISP** | All papers are static | First incremental/dynamic re-simulation approach |
+
+|---|:---:|:---:|---|
 | **Circuit Netlist** | Adjacency List + Hash Map | $O(V + E)$ | $O(V + E)$ | $O(1)$ gate lookup by ID; sparse graph representation |
 | **Cycle Trapping** | Tarjan's 3-Color DFS | $O(V + E)$ | $O(V)$ | Traps back-edges (feedback loops) with White/Gray/Black node coloration |
 | **Eval Scheduling** | Kahn's In-Degree BFS | $O(V + E)$ | $O(V)$ | Establishes dependency-safe linear execution order |
@@ -40,6 +84,7 @@ DigitalLogicSimulator/
 ├── Gate.h                  # Gate structures, pins, and Boolean logic dispatch
 ├── Simulator.h              # DFS cycle detector, Kahn's topo sort & truth table engine
 ├── UnionFind.h              # Disjoint-Set Union with path compression & union by rank
+├── NovelAlgorithms.h        # ⭐ Novel Algorithms: LPE + ISP (original contributions)
 ├── main.cpp                # Interactive C++ CLI menu, ASCII schematics & demos
 ├── simulator.exe           # Pre-compiled standalone static executable (Windows)
 │
