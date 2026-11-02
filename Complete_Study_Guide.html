@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Digital Logic Circuit Simulator — Complete Study Guide</title>
+<style>
+  /* ── Print & Base ── */
+  @page {
+    size: A4;
+    margin: 20mm 18mm 20mm 18mm;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 11pt;
+    line-height: 1.65;
+    color: #1a1a2e;
+    background: #fff;
+  }
+
+  /* ── Page Breaks ── */
+  .page-break { page-break-after: always; break-after: page; }
+  .no-break   { page-break-inside: avoid; break-inside: avoid; }
+
+  /* ── Cover Page ── */
+  .cover {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 240mm;
+    text-align: center;
+    background: linear-gradient(135deg, #0f3460 0%, #16213e 60%, #0d7377 100%);
+    color: white;
+    border-radius: 8px;
+    padding: 40px;
+  }
+  .cover .badge {
+    background: rgba(255,255,255,0.15);
+    border: 2px solid rgba(255,255,255,0.4);
+    border-radius: 50px;
+    padding: 6px 20px;
+    font-size: 9pt;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .cover h1 { font-size: 26pt; font-weight: 800; line-height: 1.2; margin-bottom: 10px; }
+  .cover h2 { font-size: 13pt; font-weight: 300; opacity: 0.85; margin-bottom: 30px; }
+  .cover .divider { width: 80px; height: 3px; background: #14d9c5; margin: 20px auto; border-radius: 2px; }
+  .cover .meta { font-size: 10pt; opacity: 0.8; line-height: 2; }
+  .cover .meta strong { color: #14d9c5; }
+  .cover .star { font-size: 32pt; margin-bottom: 10px; }
+
+  /* ── TOC ── */
+  .toc { padding: 10px 0; }
+  .toc h2 { font-size: 16pt; color: #0f3460; border-bottom: 3px solid #14d9c5; padding-bottom: 8px; margin-bottom: 20px; }
+  .toc-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding: 6px 0;
+    border-bottom: 1px dotted #ccc;
+    font-size: 11pt;
+  }
+  .toc-item .toc-num { color: #0d7377; font-weight: 700; min-width: 30px; }
+  .toc-item .toc-title { flex: 1; padding: 0 10px; }
+  .toc-item .toc-page { color: #888; font-size: 9pt; }
+  .toc-section { font-size: 9pt; color: #555; padding: 2px 0 2px 30px; border-bottom: 1px dotted #e5e5e5; }
+
+  /* ── Sections ── */
+  .section { margin-bottom: 32px; }
+  h1.sec-title {
+    font-size: 18pt;
+    color: #0f3460;
+    border-left: 6px solid #14d9c5;
+    padding-left: 14px;
+    margin-bottom: 18px;
+    page-break-after: avoid;
+  }
+  h2.sub-title {
+    font-size: 13pt;
+    color: #0d7377;
+    margin: 20px 0 10px 0;
+    padding-bottom: 4px;
+    border-bottom: 1.5px solid #e0f7f7;
+    page-break-after: avoid;
+  }
+  h3.mini-title {
+    font-size: 11pt;
+    color: #16213e;
+    font-weight: 700;
+    margin: 16px 0 6px 0;
+    page-break-after: avoid;
+  }
+  p { margin-bottom: 10px; }
+
+  /* ── Info Boxes ── */
+  .box {
+    border-radius: 6px;
+    padding: 14px 18px;
+    margin: 14px 0;
+    page-break-inside: avoid;
+  }
+  .box-blue  { background: #e8f4fd; border-left: 5px solid #2196f3; }
+  .box-green { background: #e8f8e8; border-left: 5px solid #4caf50; }
+  .box-orange{ background: #fff8e1; border-left: 5px solid #ff9800; }
+  .box-red   { background: #fdecea; border-left: 5px solid #f44336; }
+  .box-teal  { background: #e0f7fa; border-left: 5px solid #009688; }
+  .box-purple{ background: #f3e5f5; border-left: 5px solid #9c27b0; }
+  .box-gold  { background: #fffde7; border-left: 5px solid #ffc107; }
+  .box strong { display: block; margin-bottom: 4px; font-size: 10.5pt; }
+
+  /* ── Code ── */
+  pre, code {
+    font-family: 'Cascadia Code', 'Consolas', 'Courier New', monospace;
+    font-size: 9.5pt;
+    background: #1a1a2e;
+    color: #e8f4fd;
+    border-radius: 5px;
+  }
+  pre { padding: 14px 16px; margin: 12px 0; overflow-x: auto; line-height: 1.5; }
+  code { padding: 1px 5px; font-size: 9pt; background: #e8f4fd; color: #0d7377; border-radius: 3px; }
+
+  /* ── Tables ── */
+  table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 10pt; }
+  th { background: #0f3460; color: #fff; padding: 8px 10px; text-align: left; font-size: 9.5pt; }
+  td { padding: 7px 10px; border-bottom: 1px solid #e5e5e5; vertical-align: top; }
+  tr:nth-child(even) td { background: #f8faff; }
+  tr:hover td { background: #e8f4fd; }
+
+  /* ── Algo Steps ── */
+  .steps { list-style: none; padding: 0; margin: 10px 0; }
+  .steps li {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 10px;
+    align-items: flex-start;
+    page-break-inside: avoid;
+  }
+  .step-num {
+    background: #0f3460;
+    color: white;
+    border-radius: 50%;
+    width: 26px;
+    height: 26px;
+    min-width: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10pt;
+    font-weight: 700;
+  }
+  .step-teal  .step-num { background: #009688; }
+  .step-green .step-num { background: #4caf50; }
+  .step-gold  .step-num { background: #ff9800; }
+
+  /* ── Novel Algo Highlight ── */
+  .novel-card {
+    border: 2px solid #0d7377;
+    border-radius: 10px;
+    padding: 20px 22px;
+    margin: 18px 0;
+    page-break-inside: avoid;
+    background: linear-gradient(135deg, #e0f7fa 0%, #f8faff 100%);
+  }
+  .novel-card h2 { border: none; margin-top: 0; color: #0f3460; }
+  .novel-card .tag {
+    display: inline-block;
+    background: #0d7377;
+    color: white;
+    padding: 2px 10px;
+    border-radius: 20px;
+    font-size: 8.5pt;
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  /* ── Analogy Boxes ── */
+  .analogy {
+    background: #fff9c4;
+    border: 1.5px dashed #f9a825;
+    border-radius: 6px;
+    padding: 12px 16px;
+    margin: 12px 0;
+    font-style: italic;
+    color: #4a3200;
+    page-break-inside: avoid;
+  }
+  .analogy::before { content: "💡 Simple Analogy: "; font-weight: 700; font-style: normal; color: #f57c00; }
+
+  /* ── Comparison ── */
+  .compare-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 12px 0;
+  }
+  .compare-item { border-radius: 6px; padding: 12px; }
+  .compare-old { background: #fdecea; border: 1.5px solid #ef9a9a; }
+  .compare-new { background: #e8f8e8; border: 1.5px solid #a5d6a7; }
+  .compare-item strong { display: block; margin-bottom: 6px; font-size: 10pt; }
+
+  /* ── Flowchart (ASCII art in box) ── */
+  .flow-box {
+    background: #1a1a2e;
+    color: #14d9c5;
+    border-radius: 6px;
+    padding: 16px;
+    font-family: 'Consolas', monospace;
+    font-size: 9.5pt;
+    line-height: 1.8;
+    margin: 12px 0;
+    white-space: pre;
+    overflow-x: auto;
+  }
+
+  /* ── Badges ── */
+  .badge-inline {
+    display: inline-block;
+    background: #0f3460;
+    color: white;
+    padding: 1px 8px;
+    border-radius: 12px;
+    font-size: 8.5pt;
+    vertical-align: middle;
+  }
+
+  /* ── Q&A ── */
+  .qa-item { margin-bottom: 18px; page-break-inside: avoid; }
+  .qa-q { font-weight: 700; color: #0f3460; margin-bottom: 5px; }
+  .qa-q::before { content: "Q: "; color: #d32f2f; }
+  .qa-a { padding-left: 16px; border-left: 3px solid #14d9c5; color: #333; }
+  .qa-a::before { content: "A: "; font-weight: 700; color: #0d7377; }
+
+  /* ── Footer ── */
+  .footer {
+    text-align: center;
+    font-size: 8.5pt;
+    color: #aaa;
+    border-top: 1px solid #e5e5e5;
+    padding-top: 8px;
+    margin-top: 20px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!--                    COVER PAGE                       -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="cover">
+  <div class="star">⚡</div>
+  <div class="badge">Complete Study Guide · November 2026</div>
+  <h1>Digital Logic Circuit<br>Simulator</h1>
+  <h2>Advanced Data Structures &amp; Algorithms Project</h2>
+  <div class="divider"></div>
+  <div class="meta">
+    <strong>Markanda Meher</strong> — Roll No. 206126020<br>
+    <strong>Nikhil</strong> — Roll No. 206126021<br><br>
+    Course: Advanced Data Structures &amp; Algorithms<br>
+    Repository: github.com/MarkandaMeher/DigitalLogicSimulator
+  </div>
+  <div class="divider"></div>
+  <div style="font-size:9pt; opacity:0.7;">
+    🌟 Includes Novel Algorithms: LPE &amp; ISP<br>
+    Open in browser → Ctrl+P → Save as PDF
+  </div>
+</div>
+
+<div class="page-break"></div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!--                  TABLE OF CONTENTS                  -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="toc">
+  <h2>📋 Table of Contents</h2>
+  <div class="toc-item"><span class="toc-num">1</span><span class="toc-title">What is this Project? (The Big Picture)</span></div>
+  <div class="toc-item"><span class="toc-num">2</span><span class="toc-title">The Problem We're Solving</span></div>
+  <div class="toc-item"><span class="toc-num">3</span><span class="toc-title">How the Simulator Works — Step by Step</span></div>
+  <div class="toc-item"><span class="toc-num">4</span><span class="toc-title">Data Structures Used (and Why)</span></div>
+  <div class="toc-item"><span class="toc-num">5</span><span class="toc-title">Algorithms from Literature (Surveyed Papers)</span></div>
+  <div class="toc-section">5.1 Kahn's Topological Sort (1962)</div>
+  <div class="toc-section">5.2 Tarjan's DFS Cycle Detection (1972)</div>
+  <div class="toc-section">5.3 Tarjan's DSU / Union-Find (1975)</div>
+  <div class="toc-item"><span class="toc-num">6</span><span class="toc-title">⭐ Novel Algorithm 1 — Levelized Parallel Evaluation (LPE)</span></div>
+  <div class="toc-item"><span class="toc-num">7</span><span class="toc-title">⭐ Novel Algorithm 2 — Incremental Signal Propagation (ISP)</span></div>
+  <div class="toc-item"><span class="toc-num">8</span><span class="toc-title">Circuit Examples (Half Adder, Multiplexer, ISCAS Benchmark)</span></div>
+  <div class="toc-item"><span class="toc-num">9</span><span class="toc-title">Web GUI — Drag &amp; Drop Editor</span></div>
+  <div class="toc-item"><span class="toc-num">10</span><span class="toc-title">How to Run the Project</span></div>
+  <div class="toc-item"><span class="toc-num">11</span><span class="toc-title">Q&amp;A Cheat Sheet — Answers for Teacher</span></div>
+</div>
+
+<div class="page-break"></div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!--           SECTION 1: WHAT IS THIS PROJECT          -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="section">
+<h1 class="sec-title">1. What is this Project? (The Big Picture)</h1>
+
+<p>This project is a <strong>software-based digital logic circuit simulator</strong>. Think of it as a virtual lab where you can build and test circuits made of logic gates — just like the ones used inside computers, phones, calculators — but entirely in software. No physical breadboards, no wires, no risk of burning components.</p>
+
+<div class="box box-blue">
+  <strong>🎯 One-Line Summary:</strong>
+  You draw a circuit using logic gates (AND, OR, NOT, XOR, etc.), connect them with virtual wires, give inputs (0s and 1s), and the simulator tells you what the output will be — and proves it with a truth table.
+</div>
+
+<h2 class="sub-title">What Can It Do?</h2>
+<table>
+  <tr><th>Feature</th><th>What it means</th></tr>
+  <tr><td>Build any circuit</td><td>Connect gates freely using a directed graph internally</td></tr>
+  <tr><td>Detect feedback loops</td><td>Automatically finds illegal cycles using Tarjan's DFS</td></tr>
+  <tr><td>Evaluate gates in order</td><td>Uses Kahn's algorithm to find the correct evaluation sequence</td></tr>
+  <tr><td>Truth table generation</td><td>Tests all 2ᴺ input combinations and shows outputs</td></tr>
+  <tr><td>Web GUI</td><td>Drag-and-drop gate editor in browser, live wire colors</td></tr>
+  <tr><td>Novel algorithms</td><td>LPE (parallel staging) + ISP (fast re-simulation) — original contributions</td></tr>
+</table>
+
+<h2 class="sub-title">Who Uses Such Tools in Real Life?</h2>
+<p>Companies like Intel, Qualcomm, and Samsung use similar (but much larger) software called <strong>EDA tools</strong> (Electronic Design Automation) to design chips before manufacturing them. Our simulator is a simplified educational version of the same concept.</p>
+</div>
+
+<div class="page-break"></div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!--           SECTION 2: THE PROBLEM WE'RE SOLVING     -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="section">
+<h1 class="sec-title">2. The Problem We're Solving</h1>
+
+<h2 class="sub-title">Real-World Pain Points</h2>
+<p>When students or engineers design digital circuits on a physical breadboard, they face:</p>
+
+<table>
+  <tr><th>Problem</th><th>Impact</th></tr>
+  <tr><td>Wire clutter &amp; loose connections</td><td>Circuit doesn't work but finding the bug takes hours</td></tr>
+  <tr><td>Burnt IC chips</td><td>Wrong wiring = ₹200-500 chip gone</td></tr>
+  <tr><td>No automated verification</td><td>Must manually check all input combinations</td></tr>
+  <tr><td>No cycle detection</td><td>Feedback loops cause unstable oscillating outputs</td></tr>
+  <tr><td>Slow iteration</td><td>Re-wiring takes 20 minutes; simulator takes 2 seconds</td></tr>
+</table>
+
+<div class="analogy">
+Building circuits on a breadboard without a simulator is like writing code without a compiler — you only know something's wrong when it explodes (literally).
+</div>
+
+<h2 class="sub-title">Our Solution — A Graph-Based Simulator</h2>
+<p>We model the circuit as a <strong>Directed Acyclic Graph (DAG)</strong>:</p>
+<ul style="margin: 10px 0 10px 20px; line-height: 2.2;">
+  <li><strong>Each gate = a node (vertex)</strong> in the graph</li>
+  <li><strong>Each wire = a directed edge</strong> from output of one gate to input of another</li>
+  <li>Signal flows in one direction: INPUT → Logic Gates → OUTPUT</li>
+</ul>
+
+<div class="flow-box">    INPUT A ──────┬───────────► [ XOR Gate ] ──────► OUTPUT Sum
+               │                    ▲
+               │                    │
+    INPUT B ───┴────────────────────┤
+                                    │
+               └───────────► [ AND Gate ] ──────► OUTPUT Carry</div>
+
+<p>Using graph algorithms, we can:</p>
+<ol style="margin: 10px 0 10px 20px; line-height: 2;">
+  <li>Detect if any illegal loop exists (feedback = unstable circuit)</li>
+  <li>Find the correct order to evaluate gates (topological sort)</li>
+  <li>Propagate signals from inputs to outputs automatically</li>
+  <li>Generate exhaustive truth tables for verification</li>
+</ol>
+</div>
+
+<div class="page-break"></div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!--       SECTION 3: HOW THE SIMULATOR WORKS          -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="section">
+<h1 class="sec-title">3. How the Simulator Works — Step by Step</h1>
+
+<p>When you load a circuit and click "Simulate", here's exactly what happens internally:</p>
+
+<ul class="steps">
+  <li>
+    <div class="step-num">1</div>
+    <div><strong>Circuit is stored as a graph.</strong> Every gate is a node with an ID. Every wire is a directed edge: <code>from_gate → to_gate</code>. We use an <strong>adjacency list</strong> (like a list of neighbors) for fast traversal.</div>
+  </li>
+  <li>
+    <div class="step-num">2</div>
+    <div><strong>Cycle Detection (Tarjan's DFS).</strong> Before doing anything, we check: "Is there an illegal feedback loop?" We run a Depth-First Search. If we ever reach a node we're currently visiting (gray node), that's a cycle → ERROR reported. No simulation runs on a broken circuit.</div>
+  </li>
+  <li>
+    <div class="step-num">3</div>
+    <div><strong>Topological Sort (Kahn's BFS).</strong> We figure out the correct evaluation order. A gate can only be evaluated AFTER all its input gates are done. Kahn's algorithm finds this order using in-degree counting.</div>
+  </li>
+  <li>
+    <div class="step-num">4</div>
+    <div><strong>Signal Propagation.</strong> We go through gates in topological order. For each gate, we read its inputs, apply its logic function (AND/OR/NOT/XOR/etc.), compute its output, and pass that value to connected downstream gates.</div>
+  </li>
+  <li>
+    <div class="step-num">5</div>
+    <div><strong>Read Outputs.</strong> After all gates are evaluated, OUTPUT gates hold the final result. Display it to the user.</div>
+  </li>
+  <li>
+    <div class="step-num">6</div>
+    <div><strong>Truth Table.</strong> Repeat steps 4-5 for every possible combination of 0s and 1s across all INPUT gates (2ᴺ rows total). Each row is one test case.</div>
+  </li>
+</ul>
+
+<div class="box box-green">
+  <strong>Key Insight:</strong> A digital circuit is just a DAG. Evaluating it correctly = topological sort. Verifying it = running the simulation 2ᴺ times with different inputs.
+</div>
+</div>
+
+<div class="page-break"></div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!--         SECTION 4: DATA STRUCTURES                -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="section">
+<h1 class="sec-title">4. Data Structures Used (and Why)</h1>
+
+<table>
+  <tr>
+    <th>Data Structure</th>
+    <th>Where Used</th>
+    <th>Why This One?</th>
+  </tr>
+  <tr>
+    <td><strong>Adjacency List</strong><br><code>vector&lt;vector&lt;int&gt;&gt;</code></td>
+    <td>Store the circuit graph</td>
+    <td>Circuits are sparse (few wires per gate). Adjacency list is O(V+E) space. Adjacency matrix would waste O(V²) space.</td>
+  </tr>
+  <tr>
+    <td><strong>Hash Map</strong><br><code>unordered_map&lt;int, Gate&gt;</code></td>
+    <td>Look up gate by ID</td>
+    <td>O(1) average lookup. We need to find any gate instantly by its ID.</td>
+  </tr>
+  <tr>
+    <td><strong>Queue</strong><br><code>queue&lt;int&gt;</code></td>
+    <td>Kahn's BFS topological sort</td>
+    <td>BFS needs FIFO ordering. Process gates level by level.</td>
+  </tr>
+  <tr>
+    <td><strong>Stack (implicit)</strong><br>Recursion call stack</td>
+    <td>Tarjan's DFS for cycles</td>
+    <td>DFS is naturally recursive. Goes deep into the graph first.</td>
+  </tr>
+  <tr>
+    <td><strong>Array / Vector</strong><br><code>vector&lt;int&gt; inDegree</code></td>
+    <td>In-degree counting for Kahn's</td>
+    <td>Track how many inputs each gate is waiting for. O(1) update and read.</td>
+  </tr>
+  <tr>
+    <td><strong>Disjoint Set Union (DSU)</strong><br>Union-Find with path compression</td>
+    <td>Wire net grouping</td>
+    <td>Group all physically connected wires into "nets". O(α(n)) per operation — nearly O(1).</td>
+  </tr>
+  <tr>
+    <td><strong>Boolean Array</strong><br><code>bool dirty[]</code></td>
+    <td>ISP novel algorithm</td>
+    <td>Mark which gates need re-evaluation. O(1) mark/check per gate.</td>
+  </tr>
+</table>
+
+<div class="box box-orange">
+  <strong>Why Adjacency List over Matrix?</strong> A real circuit with 100 gates rarely has all 100×100 possible connections. Most gates have 2-3 inputs max. Adjacency list only stores real connections → saves memory and makes BFS/DFS faster.
+</div>
+</div>
+
+<div class="page-break"></div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!--         SECTION 5: LITERATURE ALGORITHMS          -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="section">
+<h1 class="sec-title">5. Algorithms from Literature (Surveyed Papers)</h1>
+
+<!-- 5.1 Kahn's -->
+<h2 class="sub-title">5.1 — Kahn's Topological Sort (1962)</h2>
+<div class="box box-blue"><strong>Paper:</strong> Kahn, A.B. (1962). "Topological Sorting of Large Networks." Communications of the ACM.</div>
+
+<p><strong>What it does:</strong> Given a DAG, produce a linear ordering of all nodes such that every node appears BEFORE the nodes it points to.</p>
+
+<div class="analogy">
+Imagine scheduling tasks where task B cannot start until task A finishes. Kahn's algorithm tells you the right order to schedule all tasks so no one waits unnecessarily.
+</div>
+
+<h3 class="mini-title">Pseudocode:</h3>
+<pre>1. Compute in-degree for every node
+2. Add all nodes with in-degree = 0 to Queue
+3. While Queue is not empty:
+   a. Pop node U from Queue
+   b. Add U to result order
+   c. For each neighbor V of U:
+        - Decrement in-degree of V by 1
+        - If in-degree of V == 0, add V to Queue
+4. If result has all V nodes → valid topo order
+   Else → cycle detected (should not reach here after Tarjan's check)</pre>
+
+<p><strong>Complexity:</strong> O(V + E) — visits every vertex and edge exactly once.</p>
+<p><strong>Used in our project:</strong> Determines the order in which gates are evaluated during simulation.</p>
+<p><strong>Drawback (why we extended it):</strong> Gives only a flat linear order. Doesn't tell you WHICH gates can run simultaneously in parallel. Doesn't compute how many sequential stages are needed (Critical Path).</p>
+
+<!-- 5.2 Tarjan DFS -->
+<h2 class="sub-title">5.2 — Tarjan's DFS Cycle Detection (1972)</h2>
+<div class="box box-blue"><strong>Paper:</strong> Tarjan, R.E. (1972). "Depth-First Search and Linear Graph Algorithms." SIAM Journal on Computing.</div>
+
+<p><strong>What it does:</strong> Detects whether a directed graph contains any cycle (loop) using Depth-First Search with 3 colors for nodes.</p>
+
+<h3 class="mini-title">The 3-Color System:</h3>
+<table>
+  <tr><th>Color</th><th>Meaning</th></tr>
+  <tr><td>⬜ White (0)</td><td>Not visited yet</td></tr>
+  <tr><td>🔲 Gray (1)</td><td>Currently being visited (on the DFS stack)</td></tr>
+  <tr><td>⬛ Black (2)</td><td>Fully processed — all descendants explored</td></tr>
+</table>
+
+<p><strong>Cycle detection rule:</strong> If during DFS we find an edge from a Gray node to another Gray node → we've gone back to a node we're currently processing = cycle!</p>
+
+<div class="analogy">
+Imagine exploring a maze. Gray rooms = rooms you're currently inside (doors open). If you walk into a room that's already open (gray), you've found a loop.
+</div>
+
+<p><strong>Complexity:</strong> O(V + E)</p>
+<p><strong>Used in our project:</strong> Runs before any simulation. If a cycle is found, simulation is blocked and an error is shown.</p>
+<p><strong>Drawback:</strong> Only detects cycles. Gives no information about parallel execution or incremental updates.</p>
+
+<!-- 5.3 Tarjan DSU -->
+<h2 class="sub-title">5.3 — Tarjan's Disjoint Set Union / Union-Find (1975)</h2>
+<div class="box box-blue"><strong>Paper:</strong> Tarjan, R.E. (1975). "Efficiency of a Good But Not Linear Set Union Algorithm." Journal of the ACM.</div>
+
+<p><strong>What it does:</strong> Groups elements into sets. Supports two operations: <code>find(x)</code> — which set does x belong to? <code>union(x, y)</code> — merge the sets of x and y.</p>
+
+<div class="analogy">
+Imagine you have groups of students. Each group has a leader. <code>find()</code> tells you who the leader of your group is. <code>union()</code> merges two groups under one leader.
+</div>
+
+<h3 class="mini-title">Optimizations:</h3>
+<ul style="margin: 8px 0 8px 20px; line-height: 2;">
+  <li><strong>Path Compression:</strong> When finding root, flatten the path — all nodes point directly to root after first find</li>
+  <li><strong>Union by Rank:</strong> Always attach the smaller tree under the larger tree's root</li>
+</ul>
+
+<p><strong>Complexity:</strong> O(α(n)) per operation — α is the inverse Ackermann function, essentially O(1) for all practical inputs.</p>
+<p><strong>Used in our project:</strong> Groups all wires that are electrically connected into "nets". Two wires in the same net carry the same signal value.</p>
+<p><strong>Drawback:</strong> Static grouping only. Doesn't handle dynamic changes to the circuit topology during simulation.</p>
+</div>
+
+<div class="page-break"></div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!--        SECTION 6: NOVEL ALGORITHM 1 — LPE         -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="section">
+<h1 class="sec-title">6. ⭐ Novel Algorithm 1 — Levelized Parallel Evaluation (LPE)</h1>
+
+<div class="novel-card">
+  <div class="tag">⭐ Original Contribution</div>
+  <h2 class="sub-title" style="margin-top:8px;">Levelized Parallel Evaluation (LPE)</h2>
+  <p><strong>File:</strong> <code>NovelAlgorithms.h</code> | <strong>Menu Option:</strong> 15 | <strong>Complexity:</strong> O(V + E)</p>
+</div>
+
+<h2 class="sub-title">What Problem Does LPE Solve?</h2>
+<p>Kahn's algorithm gives you a list like: <em>"evaluate gate 0, then gate 1, then gate 2, then gate 3..."</em> — a flat linear sequence. But this is wasteful! Look at the Half Adder:</p>
+
+<div class="flow-box">INPUT A ──► XOR Gate ──► Sum Output
+INPUT B ──► AND Gate ──► Carry Output</div>
+
+<p>After both inputs are ready, the XOR gate and AND gate <strong>have nothing to do with each other</strong>. They could evaluate at the same time (in parallel)! But Kahn's forces them into a sequence: XOR first, then AND (or vice versa).</p>
+
+<div class="box box-orange">
+  <strong>What LPE adds:</strong> Groups gates into "stages" where all gates in a stage are fully independent of each other and CAN run simultaneously. Also computes the Critical Path — the minimum number of stages needed to get the final output.
+</div>
+
+<h2 class="sub-title">Simple Explanation (In Plain English)</h2>
+
+<div class="analogy">
+Think of it like a factory assembly line. Instead of one worker doing everything one step at a time, you organize workers into shifts (stages). Everyone in the same shift can work simultaneously because they don't need each other's results. LPE figures out these shifts automatically.
+</div>
+
+<h2 class="sub-title">How It Works — Step by Step</h2>
+
+<ul class="steps">
+  <li class="step-teal">
+    <div class="step-num">1</div>
+    <div><strong>Start like Kahn's BFS.</strong> Find all gates with in-degree = 0 (gates that don't need any input from other gates — these are INPUT gates). These go into Stage 0.</div>
+  </li>
+  <li class="step-teal">
+    <div class="step-num">2</div>
+    <div><strong>Assign a level to each gate.</strong> Each gate's level = 1 + the maximum level of all its input gates. This is the key difference from Kahn's — we propagate the maximum depth forward.</div>
+  </li>
+  <li class="step-teal">
+    <div class="step-num">3</div>
+    <div><strong>Group gates by level.</strong> All gates at level 0 → Stage 0. All gates at level 1 → Stage 1. Etc.</div>
+  </li>
+  <li class="step-teal">
+    <div class="step-num">4</div>
+    <div><strong>Compute Critical Path Length.</strong> The highest level number + 1 = how many stages you need at minimum to get output. This is the Critical Path.</div>
+  </li>
+  <li class="step-teal">
+    <div class="step-num">5</div>
+    <div><strong>Compute Parallel Speedup.</strong> Total gates ÷ Critical Path Length = theoretical speedup ratio compared to sequential evaluation.</div>
+  </li>
+</ul>
+
+<h2 class="sub-title">Example — Half Adder</h2>
+<pre>Gate A (INPUT)   → Level 0   ┐
+Gate B (INPUT)   → Level 0   ┘ Stage 0 (run simultaneously)
+
+Gate XOR1        → Level 1   ┐ (needs A and B → both level 0, so XOR1 = 0+1 = 1)
+Gate AND1        → Level 1   ┘ Stage 1 (run simultaneously)
+
+Gate Sum (OUT)   → Level 2   ┐ (needs XOR1 → level 1, so Sum = 1+1 = 2)
+Gate Carry (OUT) → Level 2   ┘ Stage 2 (run simultaneously)
+
+Critical Path Length = 3 stages
+Sequential would take 6 steps → Parallel needs only 3 → 2x Speedup!</pre>
+
+<h2 class="sub-title">Full Pseudocode</h2>
+<pre>LPE(graph G):
+  Compute in-degree for all gates
+  levelOf[gate] = 0 for all gates
+
+  // Initialize queue with all source gates (in-degree = 0)
+  for each gate g:
+    if inDegree[g] == 0:
+      Queue.push(g)
+      levelOf[g] = 0
+
+  while Queue not empty:
+    u = Queue.pop()
+    result_order.push(u)
+
+    for each gate v that u connects to:
+      inDegree[v] -= 1
+      levelOf[v] = max(levelOf[v], levelOf[u] + 1)  ← KEY NEW STEP
+      if inDegree[v] == 0:
+        Queue.push(v)
+
+  // Group into stages
+  criticalPathLength = max(levelOf) + 1
+  for each gate g:
+    stages[levelOf[g]].push(g)
+
+  parallelSpeedup = total_gates / criticalPathLength
+  return stages, criticalPathLength, parallelSpeedup</pre>
+
+<div class="box box-purple">
+  <strong>Why This is Novel (What to Tell Teacher):</strong><br>
+  Kahn's 1962 paper gives only a flat linear ordering — it has NO concept of parallel stages or critical path. No surveyed paper addresses this for logic circuit evaluation. LPE is our original modification that adds maximum-depth propagation to Kahn's BFS, enabling parallel stage identification — a feature used in real EDA (Electronic Design Automation) timing analysis tools.
+</div>
+
+<h2 class="sub-title">What LPE Outputs (from our simulator)</h2>
+<pre>Stage 0 [Primary Inputs]:    A, B
+Stage 1:                     XOR1, AND1    ← can run in parallel!
+Stage 2 [Final Outputs]:     Sum, Carry    ← can run in parallel!
+
+Critical Path Depth:  3 levels
+Parallel Speedup:     ~2x faster than sequential</pre>
+</div>
+
+<div class="page-break"></div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!--        SECTION 7: NOVEL ALGORITHM 2 — ISP         -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="section">
+<h1 class="sec-title">7. ⭐ Novel Algorithm 2 — Incremental Signal Propagation (ISP)</h1>
+
+<div class="novel-card">
+  <div class="tag">⭐ Original Contribution</div>
+  <h2 class="sub-title" style="margin-top:8px;">Incremental Signal Propagation (ISP)</h2>
+  <p><strong>File:</strong> <code>NovelAlgorithms.h</code> | <strong>Menu Option:</strong> 16 | <strong>Complexity:</strong> O(D + E_D) where D ≪ V</p>
+</div>
+
+<h2 class="sub-title">What Problem Does ISP Solve?</h2>
+<p>Imagine you have a circuit with 1000 gates. You're using the web GUI — clicking input switches to toggle signals. Every time you click one switch, the naive simulator re-evaluates <strong>all 1000 gates</strong> from scratch. But if you toggled INPUT A, maybe only 50 gates downstream of A actually changed. The other 950 gates produce the same output as before — re-evaluating them is pure waste.</p>
+
+<div class="compare-grid">
+  <div class="compare-item compare-old">
+    <strong>❌ Naive Approach (Before ISP)</strong>
+    Re-evaluate ALL V gates every time ANY input changes.
+    <br><br>Complexity: O(V + E)
+    <br>For 1000 gates: always 1000 evaluations
+  </div>
+  <div class="compare-item compare-new">
+    <strong>✅ ISP Approach</strong>
+    Only re-evaluate gates REACHABLE from the changed input (dirty gates).
+    <br><br>Complexity: O(D + E_D) where D ≪ V
+    <br>For 1000 gates: maybe only 50 evaluations
+  </div>
+</div>
+
+<h2 class="sub-title">Simple Explanation (In Plain English)</h2>
+
+<div class="analogy">
+Imagine a phone tree (chain of calls). If manager A calls manager B calls employees C, D, E. If A changes their message, only B, C, D, E need to be re-called — not the entire company. ISP finds exactly which gates are downstream of the changed input and only re-evaluates those.
+</div>
+
+<h2 class="sub-title">How It Works — Step by Step</h2>
+
+<ul class="steps">
+  <li class="step-green">
+    <div class="step-num">1</div>
+    <div><strong>User toggles an input gate.</strong> Say INPUT A changes from 0 to 1. We mark A as "dirty" (needs re-evaluation). Create a BFS queue starting from gate A.</div>
+  </li>
+  <li class="step-green">
+    <div class="step-num">2</div>
+    <div><strong>Dirty-bit BFS.</strong> From gate A, follow all outgoing wires. For each gate reachable from A — mark it dirty too. Continue BFS until no more reachable gates. All dirty gates = the "affected zone" of the circuit.</div>
+  </li>
+  <li class="step-green">
+    <div class="step-num">3</div>
+    <div><strong>Topological filter.</strong> Take our pre-computed topological order. Filter it to keep only dirty gates, maintaining their relative order.</div>
+  </li>
+  <li class="step-green">
+    <div class="step-num">4</div>
+    <div><strong>Re-evaluate only dirty gates.</strong> Run the signal propagation only on this filtered subset. Skip all gates that are NOT dirty — their outputs haven't changed.</div>
+  </li>
+  <li class="step-green">
+    <div class="step-num">5</div>
+    <div><strong>Report efficiency.</strong> Show how many gates were skipped vs. how many were evaluated. This is the efficiency gain.</div>
+  </li>
+</ul>
+
+<h2 class="sub-title">Example</h2>
+<pre>Circuit with 6 gates: A(0), B(1), XOR(2), AND(3), Sum(4), Carry(5)
+User toggles gate A (INPUT A):
+
+Dirty-BFS from gate A:
+  A → marks XOR, AND as dirty
+  XOR → marks Sum as dirty
+  AND → marks Carry as dirty
+
+Dirty gates = {A, XOR, AND, Sum, Carry} = 5 gates
+Non-dirty gates = {B} = 1 gate (skipped!)
+
+Re-evaluate only: A → XOR → AND → Sum → Carry
+Skip: B (its output didn't change)
+
+For a larger circuit: toggling one input in a 1000-gate circuit
+might only dirty 50 gates → 95% of computation saved!</pre>
+
+<h2 class="sub-title">Full Pseudocode</h2>
+<pre>ISP(graph G, changed_gate c, topoOrder T):
+  // Step 1: Dirty-bit BFS
+  dirty[all gates] = false
+  dirty[c] = true
+  Queue.push(c)
+
+  while Queue not empty:
+    u = Queue.pop()
+    for each gate v that u connects to:
+      if not dirty[v]:
+        dirty[v] = true
+        Queue.push(v)
+
+  // Step 2: Filter topological order to dirty only
+  dirtyTopoOrder = []
+  for each gate g in topoOrder T:
+    if dirty[g]:
+      dirtyTopoOrder.push(g)
+
+  // Step 3: Re-evaluate only dirty gates
+  for each gate g in dirtyTopoOrder:
+    evaluateGate(g)   // reads current inputs, computes output
+
+  // Step 4: Report efficiency
+  D = count of dirty gates
+  skipped = V - D
+  percentSaved = (skipped / V) * 100
+  return D, skipped, percentSaved</pre>
+
+<div class="box box-purple">
+  <strong>Why This is Novel (What to Tell Teacher):</strong><br>
+  All three surveyed papers (Kahn 1962, Tarjan DFS 1972, Tarjan DSU 1975) assume <strong>static, one-time computation</strong> on a fixed graph. None of them address what happens when inputs change dynamically during interactive simulation. ISP is our original algorithm specifically designed for <strong>interactive simulators</strong> where users toggle inputs in real time. This is the exact use case of our web GUI and CLI demos.
+</div>
+
+<h2 class="sub-title">ISP Complexity Analysis</h2>
+<table>
+  <tr><th>Scenario</th><th>Gates Evaluated</th><th>Complexity</th></tr>
+  <tr><td>Naive (always full simulation)</td><td>All V gates every time</td><td>O(V + E)</td></tr>
+  <tr><td>ISP (best case: isolated input)</td><td>Only 1 gate</td><td>O(1)</td></tr>
+  <tr><td>ISP (typical case)</td><td>D gates where D ≪ V</td><td>O(D + E_D)</td></tr>
+  <tr><td>ISP (worst case: input fans out everywhere)</td><td>All V gates</td><td>O(V + E) = same as naive</td></tr>
+</table>
+<p>In typical digital circuits, most inputs fan out to a small subset of the circuit → ISP is dramatically faster in practice.</p>
+</div>
+
+<div class="page-break"></div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!--         SECTION 8: CIRCUIT EXAMPLES               -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="section">
+<h1 class="sec-title">8. Circuit Examples</h1>
+
+<h2 class="sub-title">8.1 — Half Adder (Menu Option 11)</h2>
+<p>A Half Adder adds two 1-bit numbers A and B to produce a Sum and a Carry.</p>
+<table>
+  <tr><th>A</th><th>B</th><th>Sum (A XOR B)</th><th>Carry (A AND B)</th></tr>
+  <tr><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+  <tr><td>0</td><td>1</td><td>1</td><td>0</td></tr>
+  <tr><td>1</td><td>0</td><td>1</td><td>0</td></tr>
+  <tr><td>1</td><td>1</td><td>0</td><td>1</td></tr>
+</table>
+<pre>Boolean Equations:   Sum = A ⊕ B (XOR)    |    Carry = A · B (AND)
+Gates: XOR (G2), AND (G3)  |  Inputs: A(G0), B(G1)  |  Outputs: Sum(G4), Carry(G5)</pre>
+
+<h2 class="sub-title">8.2 — 2-to-1 Multiplexer (Menu Option 13)</h2>
+<p>A Mux selects one of two data inputs (A or B) based on a selector switch (S). If S=0 → output is A. If S=1 → output is B.</p>
+<pre>Y = (A AND NOT S) OR (B AND S)
+
+3 inputs: A, B, S  |  5 gates: NOT, 2×AND, OR  |  1 output: Y</pre>
+
+<h2 class="sub-title">8.3 — IEEE ISCAS '85 c17 Benchmark (Menu Option 14)</h2>
+<p>This is an industry-standard benchmark circuit used by chip designers to test EDA tools. It has 5 primary inputs, 6 NAND gates, and 2 primary outputs — producing 32 truth table rows (2⁵ = 32). We validate our simulator against this known benchmark to prove correctness.</p>
+
+<div class="box box-gold">
+  <strong>Why ISCAS '85 matters:</strong> If our simulator produces the same truth table as the official benchmark specification, it proves our graph algorithms and signal propagation are working correctly.
+</div>
+</div>
+
+<div class="page-break"></div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!--         SECTION 9: WEB GUI                        -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="section">
+<h1 class="sec-title">9. Web GUI — Drag &amp; Drop Editor</h1>
+
+<p>The project includes a browser-based circuit editor at <code>web/index.html</code>. It mirrors all the C++ logic in JavaScript.</p>
+
+<table>
+  <tr><th>Feature</th><th>How it works</th></tr>
+  <tr><td>Drag-and-drop gates</td><td>HTML5 Canvas with mouse event handlers. Gates are draggable objects.</td></tr>
+  <tr><td>Connect gates with wires</td><td>Click output pin → click input pin → wire drawn. Internally stores as edge in JS graph.</td></tr>
+  <tr><td>Live wire colors</td><td>Green wire = HIGH signal (1). Gray wire = LOW signal (0). Updates on every input toggle.</td></tr>
+  <tr><td>Input toggles</td><td>Click an INPUT gate to flip its value 0↔1. Triggers ISP-style re-simulation in JS.</td></tr>
+  <tr><td>Kahn's Animation</td><td>Click "Animate" to watch topological sort happen step-by-step, gate by gate, with visual highlights.</td></tr>
+  <tr><td>Truth Table button</td><td>Generates all 2ᴺ rows in the browser.</td></tr>
+</table>
+
+<div class="box box-teal">
+  <strong>Architecture:</strong> The web GUI does NOT call the C++ executable. It has a complete 1:1 reimplementation of all graph algorithms (Kahn's, Tarjan's DFS, signal propagation) written in JavaScript inside <code>circuit-engine.js</code>. The C++ and JS share the same algorithmic logic — different language, same design.
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!--         SECTION 10: HOW TO RUN                    -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="section">
+<h1 class="sec-title">10. How to Run the Project</h1>
+
+<h2 class="sub-title">C++ Console Simulator</h2>
+<pre>// Option 1: Use pre-compiled binary (Windows)
+.\simulator.exe
+
+// Option 2: Compile from source (requires g++ with C++17)
+$env:PATH = "C:\msys64\ucrt64\bin;" + $env:PATH
+g++ -std=c++17 -O2 -static -o simulator.exe main.cpp
+.\simulator.exe</pre>
+
+<h2 class="sub-title">Web GUI</h2>
+<pre>// Simply open in browser:
+web\index.html
+
+// Or run with local server:
+python web\server.py
+// Then open: http://localhost:8000</pre>
+
+<h2 class="sub-title">Key Menu Options to Demo</h2>
+<table>
+  <tr><th>Option</th><th>What it shows</th></tr>
+  <tr><td>11</td><td>Half Adder — full schematic, simulation, truth table</td></tr>
+  <tr><td>14</td><td>ISCAS '85 benchmark — industry validation</td></tr>
+  <tr><td>15</td><td>⭐ LPE demo — parallel stages and critical path</td></tr>
+  <tr><td>16</td><td>⭐ ISP demo — incremental re-simulation efficiency</td></tr>
+</table>
+</div>
+
+<div class="page-break"></div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!--         SECTION 11: Q&A CHEAT SHEET               -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="section">
+<h1 class="sec-title">11. Q&amp;A Cheat Sheet — Answers for Teacher</h1>
+
+<div class="qa-item">
+  <div class="qa-q">What is the problem you are solving?</div>
+  <div class="qa-a">Physical circuit prototyping on breadboards is error-prone, slow, and expensive. We built a software simulator where any combinational digital circuit can be constructed, verified for correctness (cycle detection), evaluated (topological simulation), and exhaustively tested (truth table) — all instantly without any hardware.</div>
+</div>
+
+<div class="qa-item">
+  <div class="qa-q">Why did you use a directed graph to model the circuit?</div>
+  <div class="qa-a">A digital circuit is naturally a DAG — signal flows in one direction (input to output, no feedback allowed in combinational logic). Gates are vertices, wires are directed edges. This lets us use well-known graph algorithms like Kahn's BFS and Tarjan's DFS directly on the circuit structure.</div>
+</div>
+
+<div class="qa-item">
+  <div class="qa-q">Why Kahn's algorithm specifically? Why not DFS topological sort?</div>
+  <div class="qa-a">Both produce valid topological orders. We chose Kahn's BFS-based approach because it naturally processes gates level-by-level, which aligns with how real circuit evaluation works (wait for all inputs before evaluating a gate). It also made it natural to extend into our LPE novel algorithm. DFS topological sort processes in reverse post-order which is less intuitive for circuit simulation.</div>
+</div>
+
+<div class="qa-item">
+  <div class="qa-q">What is the novelty in your project?</div>
+  <div class="qa-a">We have two original algorithms. First, <strong>LPE (Levelized Parallel Evaluation)</strong>: we modified Kahn's algorithm to propagate maximum path depth forward, grouping gates into parallel execution stages and computing the Critical Path Length. None of the 3 surveyed papers do this. Second, <strong>ISP (Incremental Signal Propagation)</strong>: we designed a dirty-bit BFS that, when an input changes, re-evaluates ONLY the downstream-affected gates instead of all gates. This reduces complexity from O(V+E) to O(D + E_D). All surveyed papers assume static computation — none address dynamic re-simulation.</div>
+</div>
+
+<div class="qa-item">
+  <div class="qa-q">Can you explain LPE in simple terms?</div>
+  <div class="qa-a">Imagine a factory with shifts. Workers in the same shift don't depend on each other, so they work simultaneously. LPE organizes circuit gates into shifts (stages). Gates in the same stage are fully independent and can evaluate in parallel — like real hardware. The number of shifts needed is the Critical Path Length, a key metric in chip design.</div>
+</div>
+
+<div class="qa-item">
+  <div class="qa-q">Can you explain ISP in simple terms?</div>
+  <div class="qa-a">If only one input switch changes, why re-check every single gate in the circuit? ISP starts from the changed input and follows wires forward (BFS) to find only the gates that could possibly be affected (dirty gates). Then it re-evaluates only those, skipping everything else. Like a phone tree — only call the people downstream of the changed decision, not the whole company.</div>
+</div>
+
+<div class="qa-item">
+  <div class="qa-q">What is the time complexity of your simulation?</div>
+  <div class="qa-a">Full simulation: O(V + E) — same as Kahn's, where V = gates and E = wires. Truth table: O(2ᴺ × (V + E)) — run simulation for all 2ᴺ input combinations. LPE: O(V + E) — same as Kahn's, just with depth propagation added. ISP: O(D + E_D) where D is the number of dirty gates (D ≪ V typically).</div>
+</div>
+
+<div class="qa-item">
+  <div class="qa-q">How is DSU (Union-Find) used?</div>
+  <div class="qa-a">In a real circuit, multiple wire segments that are directly connected form one electrical "net" — they all carry the same voltage. DSU groups these connected wire segments into nets. When we need to know if two gates are connected, we check if they're in the same DSU set — O(α(n)) ≈ O(1) per query.</div>
+</div>
+
+<div class="qa-item">
+  <div class="qa-q">Why did you use adjacency list and not adjacency matrix?</div>
+  <div class="qa-a">Digital circuits are sparse — a gate typically has 2-3 inputs. An adjacency matrix would be V×V = potentially millions of cells for large circuits, most of them empty (zero). Adjacency list stores only actual connections, making BFS/DFS run in O(V+E) instead of O(V²).</div>
+</div>
+
+<div class="qa-item">
+  <div class="qa-q">What is the IEEE ISCAS '85 benchmark?</div>
+  <div class="qa-a">It's a set of standard test circuits published by the IEEE in 1985, used by chip designers worldwide to validate EDA simulation tools. We implement c17 — a 6-NAND circuit with 5 inputs — and verify our simulator produces the exact same 32-row truth table as the known specification. This validates that our algorithms are correct.</div>
+</div>
+
+<div class="qa-item">
+  <div class="qa-q">What are the limitations of your project?</div>
+  <div class="qa-a">1) Only handles combinational logic (no flip-flops or sequential circuits with memory). 2) Truth table is exponential (O(2ᴺ)) — not feasible for circuits with 30+ inputs. 3) Web GUI is a separate JS implementation, not directly calling C++ (due to browser sandbox). 4) No propagation delay modeling (gates are assumed to switch instantly).</div>
+</div>
+
+<div class="qa-item">
+  <div class="qa-q">What future work can be done?</div>
+  <div class="qa-a">1) Extend to sequential circuits (flip-flops, registers, state machines). 2) Add gate propagation delay modeling for timing simulation. 3) Compile ISP + LPE into WebAssembly to run C++ algorithms natively in browser. 4) Support BLIF/BENCH netlist file formats for importing standard benchmark circuits. 5) Implement formal verification using BDDs (Binary Decision Diagrams).</div>
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!--              SUMMARY TABLE                         -->
+<!-- ═══════════════════════════════════════════════════ -->
+<div class="section no-break">
+<h1 class="sec-title">Quick Reference Summary</h1>
+<table>
+  <tr><th>Component</th><th>Algorithm / DS</th><th>Complexity</th><th>Purpose</th></tr>
+  <tr><td>Graph Storage</td><td>Adjacency List</td><td>O(V+E) space</td><td>Store gates &amp; wires</td></tr>
+  <tr><td>Gate Lookup</td><td>Hash Map</td><td>O(1) avg</td><td>Find gate by ID instantly</td></tr>
+  <tr><td>Cycle Check</td><td>Tarjan's 3-Color DFS</td><td>O(V+E)</td><td>Detect illegal feedback loops</td></tr>
+  <tr><td>Eval Order</td><td>Kahn's In-Degree BFS</td><td>O(V+E)</td><td>Safe gate evaluation sequence</td></tr>
+  <tr><td>Wire Groups</td><td>DSU / Union-Find</td><td>O(α(n)) each</td><td>Group connected wire nets</td></tr>
+  <tr><td>Truth Table</td><td>Bitwise Iteration</td><td>O(2ᴺ·(V+E))</td><td>Exhaustive verification</td></tr>
+  <tr><td>⭐ LPE</td><td>Modified Kahn's BFS</td><td>O(V+E)</td><td>Parallel stages + Critical Path</td></tr>
+  <tr><td>⭐ ISP</td><td>Dirty-bit BFS</td><td>O(D+E_D)</td><td>Fast incremental re-simulation</td></tr>
+</table>
+</div>
+
+<div class="footer">
+  Digital Logic Circuit Simulator — Complete Study Guide<br>
+  Markanda Meher (206126020) &amp; Nikhil (206126021) | Advanced DSA Project | November 2026<br>
+  GitHub: github.com/MarkandaMeher/DigitalLogicSimulator
+</div>
+
+</body>
+</html>
